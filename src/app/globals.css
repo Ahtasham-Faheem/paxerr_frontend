@@ -1,0 +1,293 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #EB5939;
+  --font-primary: "Sddystopiandemo";
+  --font-tomorrow: "Tomorrow";
+  --font-valorant: "Valorant";
+  --text-h1: clamp(1rem, 10vw + 3rem, 100rem);
+  --text-h2: clamp(1rem, 5vw + 3rem, 100rem);
+  --text-h3: clamp(1rem, 1vw + 0.4rem, 40rem);
+  --text-h4: clamp(1rem, 0.5vw + 0.1rem, 30rem);
+  --text-h5: 1.25rem;
+  --breakpoint-2xl: 100rem;
+}
+
+@font-face {
+  font-family: Sddystopiandemo;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/Sddystopiandemo-GO7xa.otf");
+}
+
+@font-face {
+  font-family: Tomorrow;
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("/fonts/Tomorrow-Regular.ttf");
+}
+
+@font-face {
+  font-family: Valorant;
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("/fonts/Valorant.ttf");
+}
+
+
+:root {
+  --background: #000000;
+  --foreground: #BABABA;
+}
+
+* {
+  pointer-events: none;
+  user-select: none;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+  cursor: none;
+}
+
+.background {
+  background-color: #0D0D0D;
+  background-image: url("/images/shapes/bg.svg");
+  background-size: auto calc(50vh - 18px);
+  background-repeat: repeat;
+  background-position: center;
+}
+
+@media screen and (max-width: 1024px) {
+  .background {
+    background-size: auto calc(25vh - 18px);
+  }
+}
+
+.spline-overlay {
+  background-color: #0D0D0D;
+  width: 137px;
+  height: 36px;
+  border-radius: 12px;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: -30;
+  pointer-events: none;
+}
+
+.particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -40;
+}
+
+/* Button Clip Path */
+.btn {
+  background-image: url("/images/shapes/btn.svg");
+  background-repeat: no-repeat;
+  background-size: 100% 120%;
+  background-position: center;
+  clip-path: polygon(8% 0, 100% 0, 100% 75%, 92% 100%, 0 100%, 0 25%);
+}
+
+/* Sign Form Clip Path */
+.form-bg {
+  clip-path: polygon(12% 0, 38% 0, 45% 10%, 55% 10%, 62% 0, 88% 0, 100% 10%, 100% 80%, 75% 100%, 25% 100%, 0 80%, 0 10%);
+}
+
+/* Live Chat Clip Path */
+.chat-bg {
+  clip-path: polygon(6% 0, 42% 0, 47% 8%, 53% 8%, 58% 0, 94% 0, 100% 10%, 100% 85%, 90% 100%, 10% 100%, 0 85%, 0 10%);
+}
+
+/* Order Summary Clip Path */
+@media (width < 100rem) {
+  .order-bg {
+    clip-path: polygon(10% 0, 38% 0, 45% 8%, 55% 8%, 62% 0, 90% 0, 100% 10%, 100% 85%, 80% 100%, 20% 100%, 0 85%, 0 10%);
+  }
+}
+
+@media (width > 100rem) {
+  .order-bg {
+    background-image: url("/images/shapes/orderBG.svg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+}
+
+/* Order History Clip Path */
+@media (width < 100rem) {
+  .history-bg {
+    clip-path: polygon(5% 0, 45% 0, 48% 8%, 52% 8%, 55% 0, 95% 0, 100% 10%, 100% 90%, 95% 100%, 5% 100%, 0 90%, 0 10%);
+  }
+}
+
+@media (width > 100rem) {
+  .history-bg {
+    background-image: url("/images/shapes/historyBG.svg");
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+}
+
+/* Dashboard Card Clip Path */
+.card-bg {
+  background-image: url("/images/shapes/cardBG.svg");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+/* Dashboard Project Clip Path */
+.project-bg {
+  background-image: url("/images/shapes/projectBG.svg");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+@media (width < 64rem) {
+  .project-bg {
+    background-image: none
+  }
+}
+
+/* Dashboard Project Clip Path */
+.project-bg-mb {
+  background-image: url("/images/shapes/projectBG-mb.svg");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+@media (width > 64rem) {
+  .project-bg-mb {
+    background-image: none
+  }
+}
+
+/* Dashboard Stats Clip Path */
+.stats-bg {
+  background-image: url("/images/shapes/statsBG.svg");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+/* Cursor */
+.cursor {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background-color: #EB5939;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform-origin: center;
+  opacity: 0;
+  transition: opacity 0.2s, background-color 0.3s ease-in-out;
+}
+
+.cursor-outer {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #EB5939;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform-origin: center;
+  opacity: 0;
+  transition: opacity 0.2s, border 0.5s ease-in-out;
+}
+
+/* Hide cursor elements on mobile and restore normal cursor behavior */
+@media screen and (max-width: 1024px) {
+  .cursor,
+  .cursor-outer {
+    display: none;
+  }
+  
+  /* Restore normal cursor for mobile */
+  button, a, input, body, html, * {
+    cursor: auto !important;
+    pointer-events: auto !important;
+  }
+}
+
+/* For desktop, use custom cursor */
+@media screen and (min-width: 1025px) {
+  body {
+    cursor: none;
+  }
+  
+  button, a, input {
+    pointer-events: auto;
+    cursor: none;
+  }
+}
+
+/* Ensure proper interaction for mChat component */
+.mchat-container,
+.mchat-container * {
+  pointer-events: auto !important;
+}
+
+@keyframes fade-in-out {
+  0% {
+    opacity: 0
+  }
+
+  5% {
+    opacity: 0
+  }
+
+  50% {
+    opacity: 1
+  }
+
+  95% {
+    opacity: 0
+  }
+
+  100% {
+    opacity: 0
+  }
+}
+
+.animate-fade {
+  animation: fade-in-out 1.5s ease-in-out infinite;
+}
+
+/* WebKit browsers only */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  backdrop-filter: blur(5px);
+  border-radius: 100px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #171717;
+  border-radius: 100px;
+}
+
+.progressbar-text {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
