@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 import React, { useEffect, useState } from "react";
 import { PiShoppingCartSimpleFill, PiTimerFill } from "react-icons/pi";
 import { IoSend, IoDiamond } from "react-icons/io5";
