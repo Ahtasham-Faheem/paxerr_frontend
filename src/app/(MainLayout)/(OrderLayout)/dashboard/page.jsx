@@ -13,7 +13,11 @@ import api from "@/utils/axiosInstance";
 
 const DashboardPage = () => {
   const [dashboardValues, setDashboardValues] = useState([]);
-  const token = localStorage.getItem("token");
+  const [token, setToken] = useState(null);
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken);
+  }, []);
   const [orderStatusCounts, setOrderStatusCounts] = useState({
     canceled: 0,
     processing: 0,
@@ -59,29 +63,27 @@ const DashboardPage = () => {
   }, [token]);
 
   useEffect(() => {
-
-    if (!token) return; // early exit if token not available
+    if (!token) return;
 
     const fetchDashboardData = async () => {
       try {
-        const ordersRes = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/summary`, {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/summary`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-
-        setDashboardValues(ordersRes.data);
+        setDashboardValues(res.data);
       } catch (err) {
         console.error("Dashboard data fetch failed:", err);
       }
     };
 
     fetchDashboardData();
-  }, []);
+  }, [token]);
 
   return (
     <div
-      // onScroll={handleScroll}
+      onScroll={useScrollContext}
       className="2xl:-mt-28 2xl:max-w-[1536px] w-full flex flex-col flex-1 max-h-screen lg:max-h-[500px] 2xl:max-h-[800px] gap-4 2xl:gap-10 max-lg:!pointer-events-auto max-lg:!overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
     >
       <div className="flex-1 grid lg:grid-flow-col grid-rows-1 lg:grid-rows-3 gap-4 max-lg:my-20">
