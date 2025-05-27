@@ -5,9 +5,9 @@ export const useOrders = () => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const token = localStorage.getItem("token");
-
+  
   useEffect(() => {
+    const token = localStorage.getItem("token");
     const fetchOrders = async () => {
       try {
         const res = await axios.get(
@@ -28,7 +28,7 @@ export const useOrders = () => {
     };
 
     fetchOrders();
-  }, [token]);
+  }, []);
 
   return { orders, isLoading, error };
 };

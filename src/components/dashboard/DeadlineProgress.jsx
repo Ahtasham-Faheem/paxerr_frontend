@@ -60,8 +60,6 @@ const DeadlineProgress = ({ orderStatusCounts }) => {
     };
   }, []);
 
-  console.log('consome', orderStatusCounts)
-
   return (
     <div className="flex flex-col w-full h-full justify-center">
       <span className="text-gray-300 text-sm">Deadlines Met / Overdue</span>
@@ -71,11 +69,11 @@ const DeadlineProgress = ({ orderStatusCounts }) => {
       <div className="flex w-full justify-between mb-10 gap-3">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-          <span className="text-gray-400 text-sm">{orderStatusCounts.in_progress} Orders</span>
+          <span className="text-gray-400 text-sm">{orderStatusCounts?.in_progress} Orders</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-black"></div>
-          <span className="text-gray-400 text-sm">{orderStatusCounts.canceled} Orders</span>
+          <span className="text-gray-400 text-sm">{orderStatusCounts?.canceled} Orders</span>
         </div>
       </div>
     </div>

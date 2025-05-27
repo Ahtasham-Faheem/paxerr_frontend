@@ -1,114 +1,81 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import FilterSelect from "@/components/history/FilterSelect";
 import OrderItem from "@/components/history/OrderItem";
 import Pagination from "@/components/history/Pagination";
 import EmptyState from "@/components/history/EmptyState";
 import { useMediaQuery } from "@/components/history/hooks/useMediaQuery";
 import MOrderDetails from "@/components/history/mobile/MOrderDetails";
+import { LuSearch } from "react-icons/lu";
 import axios from "axios";
-
-
-// Mobile-specific components (placeholder imports)
-// import MobileOrderItem from "@/components/history/mobile/MobileOrderItem";
-// import MobileFilters from "@/components/history/mobile/MobileFilters";
-// import MobilePagination from "@/components/history/mobile/MobilePagination";
 
 const OrderHistory = () => {
   const [allOrders, setAllOrders] = useState([]);
-  // State for pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [ordersPerPage] = useState(4);
 
-  // State for filtering
   const [statusFilter, setStatusFilter] = useState("All Orders");
   const [categoryFilter, setCategoryFilter] = useState("All Categories");
   const [searchQuery, setSearchQuery] = useState("");
-
-  // Check if the screen is mobile
-  const isMobile = useMediaQuery("(max-width: 768px)");
-
-  // State for mobile filter drawer
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
-  // Filter order data
-  const filteredOrders = React.useMemo(() => {
-    return allOrders.filter((order) => {
-      // Apply status filter
-      const statusMatch =
-        statusFilter === "All Orders" || order.status?.toLowerCase() === statusFilter.toLowerCase();
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
-      const categoryMatch =
-        categoryFilter === "All Categories" || order.category?.toLowerCase() === categoryFilter.toLowerCase();
-      // Apply search filter (case insensitive)
-      const searchMatch =
-        searchQuery === "" ||
-        order.projectName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        order.user.toLowerCase().includes(searchQuery.toLowerCase());
-
-      return statusMatch && categoryMatch && searchMatch;
-    });
-  }, [allOrders, statusFilter, categoryFilter, searchQuery]);
+  // Fetch real orders
   useEffect(() => {
     const token = localStorage.getItem("token");
     const fetchOrders = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/orders/`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/orders/`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setAllOrders(res.data);
       } catch (err) {
         console.error("Failed to fetch orders:", err);
       }
     };
-
     fetchOrders();
   }, []);
 
-  // Get unique categories and statuses for filters
-  const categories = React.useMemo(() => {
-    return [
-      "All Categories",
-      ...new Set(allOrders.map((order) => order.category)),
-    ];
+  const filteredOrders = useMemo(() => {
+    return allOrders.filter((order) => {
+      const statusMatch =
+        statusFilter === "All Orders" ||
+        order.status?.toLowerCase() === statusFilter.toLowerCase();
+
+      const categoryMatch =
+        categoryFilter === "All Categories" ||
+        order.category?.toLowerCase() === categoryFilter.toLowerCase();
+
+      const searchMatch =
+        searchQuery === "" || order.id?.toString() === searchQuery.trim();
+
+      return statusMatch && categoryMatch && searchMatch;
+    });
+  }, [allOrders, statusFilter, categoryFilter, searchQuery]);
+
+  const categories = useMemo(() => {
+    return ["All Categories", ...new Set(allOrders.map((order) => order.category))];
   }, [allOrders]);
 
-  const statuses = React.useMemo(() => {
-    return [
-      "All Orders",
-      ...new Set(allOrders.map((order) => order.status)),
-    ];
+  const statuses = useMemo(() => {
+    return ["All Orders", ...new Set(allOrders.map((order) => order.status))];
   }, [allOrders]);
 
-  // Get current orders
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = filteredOrders.slice(
-    indexOfFirstOrder,
-    indexOfLastOrder
-  );
+  const currentOrders = filteredOrders.slice(indexOfFirstOrder, indexOfLastOrder);
 
-  // Reset pagination when filters change
   useEffect(() => {
     if (currentPage > Math.ceil(filteredOrders.length / ordersPerPage)) {
-      setCurrentPage(1); // Reset to page 1 if current page exceeds total pages
+      setCurrentPage(1);
     }
   }, [filteredOrders, currentPage, ordersPerPage]);
 
-  // Calculate total pages
   const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
-
-  // Reference to track if we have orders
   const hasOrders = allOrders.length > 0;
 
-  // Handle filter changes
   const handleStatusChange = (value) => {
     setStatusFilter(value);
     setCurrentPage(1);
@@ -119,7 +86,6 @@ const OrderHistory = () => {
     setCurrentPage(1);
   };
 
-  // Toggle mobile filter drawer
   const toggleMobileFilter = () => {
     setMobileFilterOpen(!mobileFilterOpen);
   };
@@ -136,27 +102,28 @@ const OrderHistory = () => {
           {hasOrders ? (
             <>
               <div className="w-full px-4 sm:px-16 gap-4 2xl:gap-6 flex justify-start items-center my-4">
-                {/* Status Filter */}
                 <div className="text-[#7F7F7F]">
-                  <FilterSelect
-                    value={statusFilter}
-                    options={statuses}
-                    onChange={handleStatusChange}
-                  />
+                  <FilterSelect value={statusFilter} options={statuses} onChange={handleStatusChange} />
                 </div>
-
-                {/* Category Filter */}
                 <div className="ml-5 text-[#7F7F7F]">
-                  <FilterSelect
-                    value={categoryFilter}
-                    options={categories}
-                    onChange={handleCategoryChange}
+                  <FilterSelect value={categoryFilter} options={categories} onChange={handleCategoryChange} />
+                </div>
+                <div className="flex-1 flex gap-3">
+                  <input
+                    type="search"
+                    id="search"
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="!pointer-events-auto block px-6 py-3 w-fit ms-auto bg-[#171717] text-sm text-white rounded-full focus:outline-none"
+                    placeholder="Search By Order ID"
                   />
+                  <button>
+                    <LuSearch size={30} className="text-primary" />
+                  </button>
                 </div>
               </div>
               <div className="2xl:space-y-4 py-2 sm:py-4 2xl:py-8 w-full h-full divide-y-2 divide-[#171717]">
                 {currentOrders.map((order) => (
-                  <OrderItem key={order.id} order={order} isMobile={false} />
+                  <OrderItem key={order.id} order={order} isMobile={false} admin={true} />
                 ))}
               </div>
               <Pagination

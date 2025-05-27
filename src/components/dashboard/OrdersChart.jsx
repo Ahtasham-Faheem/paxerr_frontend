@@ -5,16 +5,16 @@ import { PieChart } from "react-minimal-pie-chart";
 const OrdersChart = ({ orderStatusCounts }) => {
   // Define chart data
   const total =
-    orderStatusCounts.canceled +
-    orderStatusCounts.processing +
-    orderStatusCounts.in_progress +
-    orderStatusCounts.completed;
+    orderStatusCounts?.canceled +
+    orderStatusCounts?.processing +
+    orderStatusCounts?.in_progress +
+    orderStatusCounts?.completed;
 
   const chartData = [
-    { title: "Canceled", value: orderStatusCounts.canceled, color: "#00000080" },
-    { title: "Processing", value: orderStatusCounts.processing, color: "#F39C12" },
-    { title: "In Progress", value: orderStatusCounts.in_progress, color: "#EB5939" },
-    { title: "Completed", value: orderStatusCounts.completed, color: "#27AE60" },
+    { title: "Canceled", value: orderStatusCounts?.canceled, color: "#00000080" },
+    { title: "Processing", value: orderStatusCounts?.processing, color: "#F39C12" },
+    { title: "In Progress", value: orderStatusCounts?.in_progress, color: "#EB5939" },
+    { title: "Completed", value: orderStatusCounts?.completed, color: "#27AE60" },
   ];
 
   const centralText = {
@@ -28,22 +28,22 @@ const OrdersChart = ({ orderStatusCounts }) => {
         <div className="w-full max-w-36 flex justify-between items-center gap-2">
           <PiHexagonFill size={16} className="text-[#F39C12]" />
           <span className="text-[#7F7F7F] text-sm">Processing</span>
-          <span className="text-sm ml-auto">{orderStatusCounts.processing}</span>
+          <span className="text-sm ml-auto">{orderStatusCounts?.processing}</span>
         </div>
         <div className="w-full max-w-36 flex justify-between items-center gap-2">
           <PiHexagonFill size={16} className="text-[#EB5939]" />
           <span className="text-[#7F7F7F] text-sm">In Progress</span>
-          <span className="text-sm ml-auto">{orderStatusCounts.in_progress}</span>
+          <span className="text-sm ml-auto">{orderStatusCounts?.in_progress}</span>
         </div>
         <div className="w-full max-w-36 flex justify-between items-center gap-2">
           <PiHexagonFill size={16} className="text-[#27AE60]" />
           <span className="text-[#7F7F7F] text-sm">Completed</span>
-          <span className="text-sm ml-auto">{orderStatusCounts.completed}</span>
+          <span className="text-sm ml-auto">{orderStatusCounts?.completed}</span>
         </div>
         <div className="w-full max-w-36 flex justify-between items-center gap-2">
           <PiHexagonFill size={16} className="text-[#00000080]" />
           <span className="text-[#7F7F7F] text-sm">Canceled</span>
-          <span className="text-sm ml-auto">{orderStatusCounts.canceled}</span>
+          <span className="text-sm ml-auto">{orderStatusCounts?.canceled}</span>
 
         </div>
       </div>

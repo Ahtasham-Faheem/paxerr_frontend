@@ -7,16 +7,137 @@ import Pagination from "@/components/history/Pagination";
 import EmptyState from "@/components/history/EmptyState";
 import { useMediaQuery } from "@/components/history/hooks/useMediaQuery";
 import MOrderDetails from "@/components/history/mobile/MOrderDetails";
-import axios from "axios";
 
+// Sample order data
+const allOrderData = [
+  {
+    id: 1,
+    projectName: "Website Development",
+    category: "Development",
+    user: "Anatoli Petrovich",
+    message: "Hey there! How may we help you toda...",
+    time: "11:11",
+    status: "pending",
+    daysLeft: 2,
+    creationDate: "11/11/1111",
+    orderAmount: "€ 999.99",
+    payment: "Pending",
+    completed: false,
+    progress: 0.8,
+  },
+  {
+    id: 2,
+    projectName: "Logo Design",
+    category: "Design",
+    user: "Anatoli Petrovich",
+    message: "Hey there! How may we help you toda...",
+    time: "11:11",
+    status: "completed",
+    daysLeft: 0,
+    creationDate: "11/11/1111",
+    orderAmount: "€ 999.99",
+    payment: "Completed",
+    completed: true,
+    progress: 1.0,
+  },
+  {
+    id: 3,
+    projectName: "Mobile App Development",
+    category: "Development",
+    user: "Anatoli Petrovich",
+    message: "Hey there! How may we help you toda...",
+    time: "11:11",
+    status: "canceled",
+    daysLeft: 0,
+    creationDate: "11/11/1111",
+    orderAmount: "€ 999.99",
+    payment: "Refunded",
+    completed: false,
+    progress: 0.0,
+  },
+  {
+    id: 4,
+    projectName: "UI/UX Design",
+    category: "Design",
+    user: "Anatoli Petrovich",
+    message: "Hey there! How may we help you toda...",
+    time: "11:11",
+    status: "completed",
+    daysLeft: 0,
+    creationDate: "11/11/1111",
+    orderAmount: "€ 999.99",
+    payment: "Completed",
+    completed: true,
+    progress: 1.0,
+  },
+  {
+    id: 5,
+    projectName: "E-commerce Website",
+    category: "Development",
+    user: "Anatoli Petrovich",
+    message: "Hey there! How may we help you toda...",
+    time: "11:11",
+    status: "pending",
+    daysLeft: 5,
+    creationDate: "11/11/1111",
+    orderAmount: "€ 999.99",
+    payment: "Pending",
+    completed: false,
+    progress: 0.4,
+  },
+  {
+    id: 6,
+    projectName: "Branding Identity",
+    category: "Design",
+    user: "Anatoli Petrovich",
+    message: "Hey there! How may we help you toda...",
+    time: "11:11",
+    status: "completed",
+    daysLeft: 0,
+    creationDate: "11/11/1111",
+    orderAmount: "€ 999.99",
+    payment: "Completed",
+    completed: true,
+    progress: 1.0,
+  },
+  {
+    id: 7,
+    projectName: "SEO Optimization",
+    category: "Marketing",
+    user: "Anatoli Petrovich",
+    message: "Hey there! How may we help you toda...",
+    time: "11:11",
+    status: "pending",
+    daysLeft: 3,
+    creationDate: "11/11/1111",
+    orderAmount: "€ 999.99",
+    payment: "Pending",
+    completed: false,
+    progress: 0.6,
+  },
+  {
+    id: 8,
+    projectName: "Content Creation",
+    category: "Marketing",
+    user: "Anatoli Petrovich",
+    message: "Hey there! How may we help you toda...",
+    time: "11:11",
+    status: "completed",
+    daysLeft: 0,
+    creationDate: "11/11/1111",
+    orderAmount: "€ 999.99",
+    payment: "Completed",
+    completed: true,
+    progress: 1.0,
+  },
+];
 
 // Mobile-specific components (placeholder imports)
 // import MobileOrderItem from "@/components/history/mobile/MobileOrderItem";
 // import MobileFilters from "@/components/history/mobile/MobileFilters";
 // import MobilePagination from "@/components/history/mobile/MobilePagination";
 
-const OrderHistory = () => {
-  const [allOrders, setAllOrders] = useState([]);
+const OrderTab = () => {
   // State for pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [ordersPerPage] = useState(4);
@@ -34,13 +155,16 @@ const OrderHistory = () => {
 
   // Filter order data
   const filteredOrders = React.useMemo(() => {
-    return allOrders.filter((order) => {
+    return allOrderData.filter((order) => {
       // Apply status filter
       const statusMatch =
-        statusFilter === "All Orders" || order.status?.toLowerCase() === statusFilter.toLowerCase();
+        statusFilter === "All Orders" || order.status === statusFilter;
 
+      // Apply category filter
       const categoryMatch =
-        categoryFilter === "All Categories" || order.category?.toLowerCase() === categoryFilter.toLowerCase();
+        categoryFilter === "All Categories" ||
+        order.category === categoryFilter;
+
       // Apply search filter (case insensitive)
       const searchMatch =
         searchQuery === "" ||
@@ -49,43 +173,22 @@ const OrderHistory = () => {
 
       return statusMatch && categoryMatch && searchMatch;
     });
-  }, [allOrders, statusFilter, categoryFilter, searchQuery]);
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const fetchOrders = async () => {
-      try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/orders/`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        setAllOrders(res.data);
-      } catch (err) {
-        console.error("Failed to fetch orders:", err);
-      }
-    };
-
-    fetchOrders();
-  }, []);
+  }, [statusFilter, categoryFilter, searchQuery]);
 
   // Get unique categories and statuses for filters
   const categories = React.useMemo(() => {
     return [
       "All Categories",
-      ...new Set(allOrders.map((order) => order.category)),
+      ...new Set(allOrderData.map((order) => order.category)),
     ];
-  }, [allOrders]);
+  }, []);
 
   const statuses = React.useMemo(() => {
     return [
       "All Orders",
-      ...new Set(allOrders.map((order) => order.status)),
+      ...new Set(allOrderData.map((order) => order.status)),
     ];
-  }, [allOrders]);
+  }, []);
 
   // Get current orders
   const indexOfLastOrder = currentPage * ordersPerPage;
@@ -106,7 +209,7 @@ const OrderHistory = () => {
   const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
 
   // Reference to track if we have orders
-  const hasOrders = allOrders.length > 0;
+  const hasOrders = allOrderData.length > 0;
 
   // Handle filter changes
   const handleStatusChange = (value) => {
@@ -156,7 +259,7 @@ const OrderHistory = () => {
               </div>
               <div className="2xl:space-y-4 py-2 sm:py-4 2xl:py-8 w-full h-full divide-y-2 divide-[#171717]">
                 {currentOrders.map((order) => (
-                  <OrderItem key={order.id} order={order} isMobile={false} />
+                  <OrderItem key={order.id} order={order} isMobile={false} admin={true} />
                 ))}
               </div>
               <Pagination
@@ -178,4 +281,4 @@ const OrderHistory = () => {
   );
 };
 
-export default OrderHistory;
+export default OrderTab;
